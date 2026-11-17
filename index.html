@@ -44,7 +44,7 @@ h1{font-family:var(--f-display);font-size:2.4rem;line-height:1;margin:0;font-wei
 label,.lab{display:block;color:var(--ink-soft);font-size:.9rem;font-weight:700;margin:0 0 4px}
 textarea,input[type=text],select{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:var(--r-sm);padding:8px 12px;min-height:44px}
 textarea:hover,input[type=text]:hover,select:hover{border-color:var(--muted)}
-textarea{min-height:320px;resize:vertical;line-height:1.6}
+textarea{min-height:240px;resize:vertical;line-height:1.6}
 .f{margin-bottom:16px}
 .seg{display:flex;gap:4px;flex-wrap:wrap}
 .seg button,.btn{font:inherit;font-weight:800;min-height:44px;padding:8px 16px;border-radius:var(--r-sm);border:1.5px solid var(--ink);background:var(--surface);color:var(--ink);cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s,transform .1s}
@@ -58,7 +58,9 @@ textarea{min-height:320px;resize:vertical;line-height:1.6}
 .chk{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:1rem;margin:4px 0;min-height:44px;cursor:pointer}
 .chk input{width:22px;height:22px;accent-color:var(--ink)}
 .info{font-size:.9rem;color:var(--muted);margin:8px 0 0}.info.warn{color:var(--warn)}
-.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.paste{margin-top:12px}.paste summary{cursor:pointer;font-weight:800;color:var(--ink-soft);min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:3px}.paste summary:hover{color:var(--ink)}.paste textarea{margin-top:4px}
 .chip{font:inherit;font-size:.9rem;font-weight:700;color:var(--ink);background:var(--chip);border:1.5px solid transparent;border-radius:var(--r-sm);padding:4px 8px;min-height:36px;cursor:pointer;transition:background-color .15s,border-color .15s}
 .chip:hover{border-color:var(--muted)}.chip.on{border-color:var(--ink);background:var(--surface)}
 .chip.no{border-style:dashed;border-color:var(--muted)}
@@ -67,24 +69,26 @@ textarea{min-height:320px;resize:vertical;line-height:1.6}
 .ced .cf{margin:0;width:96px}.ced .cf.grow{flex:1;min-width:140px;width:auto}.ced .cbtns{display:flex;gap:4px;flex-wrap:wrap}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0;padding-top:16px;border-top:1.5px solid var(--line)}
 .acts .sp{flex:1}
-.cards{display:grid;gap:24px}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(400px,100%),1fr))}
+.card{container-type:inline-size}
 .card{background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:16px}
 .card h2{font-family:var(--f-display);text-align:center;margin:0 0 8px;font-size:1.3rem;font-weight:800;text-wrap:balance;overflow-wrap:break-word;min-width:0}
 .card h2 small{font-family:var(--f-body);color:var(--muted);font-weight:700;font-size:.9rem;margin-left:8px}
 .grid{display:grid;gap:2px;background:var(--ink);border:3px solid var(--ink);border-radius:var(--r-md);overflow:hidden}
-.hd{font-family:var(--f-display);text-align:center;font-weight:800;font-size:clamp(1.3rem,5vw,2rem);padding:4px 0;color:var(--on-dark)}
+.hd{font-family:var(--f-display);text-align:center;font-weight:800;font-size:clamp(1.1rem,7cqi,2rem);padding:4px 0;color:var(--on-dark)}
 .hd:nth-child(odd){background:var(--red)}.hd:nth-child(even){background:var(--blue)}
 .c{background:var(--surface);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;text-align:center;min-width:0}
 .c i,.cc i,.dbox>i,.pcall i,.pc i{font-style:normal;line-height:1.1;font-family:var(--f-pic)}
 .c b{font-weight:800;overflow-wrap:anywhere}
-.g5 .c i{font-size:clamp(1.6rem,7vw,3.2rem)}.g5 .c b{font-size:clamp(.8rem,2.8vw,1.2rem)}
-.g4 .c i{font-size:clamp(2rem,9vw,4rem)}.g4 .c b{font-size:clamp(.9rem,3.4vw,1.4rem)}
-.g3 .c i{font-size:clamp(2.4rem,12vw,5rem)}.g3 .c b{font-size:clamp(1rem,4vw,1.7rem)}
-.c.nopic b{font-size:clamp(1rem,4vw,1.7rem)!important}
+.g5 .c i{font-size:clamp(1.3rem,8cqi,3.2rem)}.g5 .c b{font-size:clamp(.7rem,3.2cqi,1.2rem)}
+.g4 .c i{font-size:clamp(1.6rem,10cqi,4rem)}.g4 .c b{font-size:clamp(.8rem,4cqi,1.4rem)}
+.g3 .c i{font-size:clamp(2rem,14cqi,5rem)}.g3 .c b{font-size:clamp(.9rem,5cqi,1.7rem)}
+.c.nopic b{font-size:clamp(.9rem,5cqi,1.7rem)!important}
 .c.free{background:var(--free)}.c.free b{font-family:var(--f-display)}
 .cgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px dashed var(--muted);border-left:2px dashed var(--muted)}
 .cc{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:2px dashed var(--muted);border-bottom:2px dashed var(--muted);gap:2px;text-align:center;padding:4px}
-.cc i{font-size:clamp(2rem,9vw,3.6rem)}.cc b{font-size:clamp(.9rem,3.2vw,1.3rem);font-weight:800}
+.cc i{font-size:clamp(1.6rem,11cqi,3.6rem)}.cc b{font-size:clamp(.8rem,4cqi,1.3rem);font-weight:800}
+.callpage{grid-column:1/-1}
 .draw{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;padding:16px;z-index:10}.draw[hidden]{display:none}
 .dbox{background:var(--surface);border-radius:var(--r-lg);padding:24px;text-align:center;width:min(440px,100%);max-height:100%;overflow:auto}
 .dbox>i{display:block;font-size:8rem}.dbox>b{display:block;font-family:var(--f-display);font-size:2.6rem;font-weight:800}
@@ -158,8 +162,8 @@ button.pc:hover{background:var(--chip)}
 <header class="mast"><h1>Bingo Maker</h1><p>Picture bingo for speech practice.</p></header>
 <div class="set">
  <div>
-  <div class="f"><label for="words">Words, one per line. Put an emoji first to choose the picture.</label><textarea id="words" spellcheck="false"></textarea>
-  <div class="info" id="info"></div><div class="chips" id="chips"></div></div>
+  <div class="f"><span class="lab" id="lab-w">Words</span><div class="chips" id="chips" role="group" aria-labelledby="lab-w"></div><div class="info" id="info"></div>
+   <details class="paste"><summary>Type or paste a whole list</summary><label for="words" class="sr">Word list</label><textarea id="words" spellcheck="false" placeholder="One word per line. Put an emoji first to choose the picture."></textarea></details></div>
  </div>
  <div>
   <div class="f"><label for="title">Title</label><input type="text" id="title" maxlength="40"></div>
@@ -168,7 +172,7 @@ button.pc:hover{background:var(--chip)}
   <div class="f"><span class="lab" id="lab-n">Cards</span><div class="seg" id="ncards" role="group" aria-labelledby="lab-n"><button data-v="1">1</button><button data-v="2">2</button><button data-v="4">4</button><button data-v="6">6</button><button data-v="8">8</button></div></div>
   <label class="chk"><input type="checkbox" id="free"> Free square in the middle</label>
   <label class="chk"><input type="checkbox" id="calls"> Call cards</label>
-  <p class="info">Most kid words get a picture on their own. Tap a word under the list to change its picture or remove it.</p>
+  <p class="info">Tap a word to change its picture or remove it. Most words find a picture on their own.</p>
  </div>
 </div>
 <div class="acts"><button class="btn red" id="playbtn">Play on screen</button><button class="btn" id="call">Call a word</button><button class="btn" id="shuf">Shuffle</button><span class="sp"></span><button class="btn pri" id="pdf">Download PDF</button></div>
