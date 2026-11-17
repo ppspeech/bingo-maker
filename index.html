@@ -197,6 +197,8 @@ button.pc:hover{background:var(--chip)}
   <div class="f"><span class="lab" id="lab-n">Cards</span><div class="seg" id="ncards" role="group" aria-labelledby="lab-n"><button data-v="1">1</button><button data-v="2">2</button><button data-v="4">4</button><button data-v="6">6</button><button data-v="8">8</button></div></div>
   <label class="chk"><input type="checkbox" id="free"> Free square in the middle</label>
   <label class="chk"><input type="checkbox" id="calls"> Call cards</label>
+  <div class="f"><label for="voicesel">Voice for reading words aloud</label><div class="row2"><select id="voicesel"></select><button type="button" class="btn" id="vtest">Test</button></div>
+  <div class="seg" id="vrate" role="group" aria-label="Speed" style="margin-top:8px"><button data-v=".75">Slow</button><button data-v=".9">Normal</button><button data-v="1">Quick</button></div></div>
   <p class="info">Tap a word to change its picture or remove it. Most words find a picture on their own.</p>
  </div>
 </div>
@@ -1699,9 +1701,14 @@ $("topbtn").onclick=topUp;
 const TOKS=["dot","⭐","❤️","🕷️","🚗","🦖","🐸","🍪","⚽","🦄"],TCOL=["red","blue","green","purple","orange","pink"];
 const P={names:["Me","You"],hide:false,auto:true,voice:true,tok:[{t:"dot",c:"red"},{t:"dot",c:"blue"}]};try{Object.assign(P,JSON.parse(localStorage.getItem("bingo-play")||"{}"))}catch(e){}
 if(!Array.isArray(P.tok)||P.tok.length<2)P.tok=[{t:"dot",c:"red"},{t:"dot",c:"blue"}];
-function say(t){if(!P.voice||!t)return;try{const u=new SpeechSynthesisUtterance(t);const vs=speechSynthesis.getVoices();const v=vs.find(x=>x.lang==="en-AU")||vs.find(x=>/^en-(GB|NZ)/.test(x.lang))||vs.find(x=>/^en/.test(x.lang));if(v)u.voice=v;u.lang=v?v.lang:"en-AU";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
-try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}catch(e){}
-function psave(){try{localStorage.setItem("bingo-play",JSON.stringify({names:P.names,hide:P.hide,auto:P.auto,tok:P.tok,voice:P.voice}))}catch(e){}}
+let VOICES=[];
+function vrank(v){let s=0;if(v.lang==="en-AU")s+=50;else if(/^en-(GB|NZ|IE)/.test(v.lang))s+=30;else if(/^en/.test(v.lang))s+=10;else return -1;
+  if(/premium|enhanced|natural|neural|siri/i.test(v.name))s+=40;if(/karen|catherine|lee|matilda|google/i.test(v.name))s+=15;if(/compact|eloquence|novelty|bad news|bells|bubbles|cellos|zarvox|whisper|trinoids|albert|jester|organ|superstar|wobble|boing|good news|junior|ralph|fred|grandma|grandpa|rocko|shelley|sandy|flo|reed/i.test(v.name))s-=60;return s}
+function loadVoices(){try{VOICES=speechSynthesis.getVoices().filter(v=>vrank(v)>=0).sort((a,b)=>vrank(b)-vrank(a))}catch(e){VOICES=[]}const sel=document.getElementById("voicesel");if(sel){sel.innerHTML=VOICES.length?VOICES.map(v=>`<option value="${esc(v.name)}" ${v.name===P.vname?"selected":""}>${esc(v.name)}${/\(/.test(v.name)?"":" ("+esc(v.lang)+")"}</option>`).join(""):`<option>Your device's default voice</option>`}}
+function pickVoice(){return VOICES.find(v=>v.name===P.vname)||VOICES[0]||null}
+function say(t,force){if((!P.voice&&!force)||!t)return;try{const u=new SpeechSynthesisUtterance(String(t).toLowerCase());const v=pickVoice();u.lang=v?v.lang:"en-AU";if(v){try{u.voice=v}catch(e){}}u.rate=P.vrate||.9;u.pitch=1;speechSynthesis.cancel();setTimeout(()=>speechSynthesis.speak(u),60)}catch(e){}}
+try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
+function psave(){try{localStorage.setItem("bingo-play",JSON.stringify({names:P.names,hide:P.hide,auto:P.auto,tok:P.tok,voice:P.voice,vname:P.vname,vrate:P.vrate}))}catch(e){}}
 function pnew(){const q=need(),n=ST.size,mid=Math.floor(n*n/2);P.boards=[0,1].map(()=>{let pool=[];while(pool.length<q&&W.length)pool=pool.concat(shuffle(W));const cells=pool.slice(0,q).map(x=>({p:x[0],w:x[1]}));if(ST.free&&n%2)cells.splice(mid,0,{p:"⭐",w:"FREE",free:1});return {cells,on:new Set(ST.free&&n%2?[mid]:[]),won:false}});
   P.bag=shuffle(W);P.cur=null;P.called=[];P.winner=null}
 function lines(n){const L=[];for(let r=0;r<n;r++){L.push([...Array(n)].map((_,c)=>r*n+c));L.push([...Array(n)].map((_,c)=>c*n+r))}L.push([...Array(n)].map((_,i)=>i*n+i));L.push([...Array(n)].map((_,i)=>i*n+n-1-i));return L}
@@ -1724,7 +1731,7 @@ $("play").addEventListener("click",e=>{const t=e.target.closest("[data-p],[data-
   if(a==="tok"){const v=+t.dataset.v;P.pick=P.pick===v?null:v;pdraw();return}
   if(a==="tcol"){P.tok[+t.dataset.b2].c=t.dataset.v;psave();pdraw();return}
   if(a==="ttok"){P.tok[+t.dataset.b2].t=t.dataset.v;psave();pdraw();return}
-  if(a==="replay"){const v=P.voice;P.voice=true;say(P.cur&&P.cur[1]);P.voice=v;return}
+  if(a==="replay"){say(P.cur&&P.cur[1],true);return}
   if(a==="voice"){P.voice=!P.voice;psave();pdraw();if(P.voice&&P.cur)say(P.cur[1]);return}
   if(a==="hide"){P.hide=!P.hide;psave();pdraw();return}
   if(a==="call"){if(!P.bag.length){pnew();pdraw();return}P.cur=P.bag.pop();P.called.push(P.cur);say(P.cur[1]);P.fresh=null;if(P.auto){const k=P.cur[1].toLowerCase();P.boards.forEach((B,bi)=>{B.cells.forEach((x,i)=>{if(!x.free&&x.w.toLowerCase()===k){B.on.add(i);P.fresh=null}});pcheck(bi)})}pdraw();return}
@@ -1773,4 +1780,10 @@ $("pdf").onclick=async()=>{const b=$("pdf");if(!W.length){flash("Add some words 
   catch(e){const c=e&&e.code;flash(c==="declined"?"Download cancelled.":c==="rate_limited"?"One moment, then try again.":"Couldn't make the PDF. Try again.")}
   b.disabled=false;b.textContent=t};
 all();
+
+$("voicesel").onchange=e=>{P.vname=e.target.value;psave();say(W[0]?W[0][1]:"spider",true)};
+$("vtest").onclick=()=>say(W[Math.floor(Math.random()*W.length)]?.[1]||"spider",true);
+function vrateDraw(){document.querySelectorAll("#vrate button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.v===(P.vrate||.9)))}
+$("vrate").onclick=e=>{const b=e.target.closest("button");if(!b)return;P.vrate=+b.dataset.v;psave();vrateDraw();say(W[0]?W[0][1]:"spider",true)};
+loadVoices();vrateDraw();
 </script></body></html>
