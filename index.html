@@ -8,8 +8,8 @@
  * floor: 0 FAIL · fixed: 7a, 26a, 26b, 27, 30a, 34, 48, 63, 67, 24b, F3 · structural: none printed
  * built: the project · redesign: polish · v2.0.0 */
 :root{
-  --paper:#F7F3EA;--surface:#FFFCF5;--ink:#211C17;--ink-soft:#5E554C;--muted:#7D7368;--line:#E3DACB;--chip:#EFE8DA;
-  --red:#D93A2E;--red-deep:#9E2A21;--blue:#2361C4;--blue-deep:#173F82;--gold:#F2B705;--warn:#A4471F;--free:#FBE3DF;--on-dark:#FFFCF5;
+  --paper:#F7F3EA;--surface:#FFFCF5;--ink:#211C17;--ink-soft:#5E554C;--muted:#6F655A;--line:#E3DACB;--chip:#EFE8DA;
+  --red:#C8352A;--red-deep:#9E2A21;--blue:#2361C4;--blue-deep:#173F82;--gold:#F2B705;--warn:#A4471F;--free:#FBE3DF;--on-dark:#FFFCF5;
   --scrim:rgba(33,28,23,.55);--scrim-soft:rgba(33,28,23,.4);--dab-1:var(--red);--dab-2:var(--blue);--focus:var(--blue);
   --print-paper:#FEFEFD;--print-ink:#111111;--print-muted:#666666;--print-line:#999999;
   --f-display:"Bricolage Grotesque","Nunito",system-ui,sans-serif;
@@ -21,6 +21,10 @@
 :root[data-theme="dark"]{--paper:#181512;--surface:#221E1A;--ink:#F1E9DC;--ink-soft:#C9BFB1;--muted:#A69B8D;--line:#3A332C;--chip:#2D2722;--free:#4A2724;--warn:#E6936A;--focus:#8DB4F2}
 *{box-sizing:border-box}
 html,body{overflow-x:clip}
+html{scrollbar-color:var(--muted) var(--paper);accent-color:var(--ink)}
+::selection{background:var(--gold);color:var(--ink)}
+textarea,input{caret-color:var(--red)}
+.info,.dn,.card h2 small{font-variant-numeric:tabular-nums}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-weight:600;font-size:16px;line-height:1.5}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 button:disabled{opacity:.5;cursor:not-allowed}
@@ -86,6 +90,7 @@ textarea{min-height:320px;resize:vertical;line-height:1.6}
 .pbtn{font:inherit;font-weight:800;font-size:.9rem;min-width:84px;min-height:84px;padding:4px 8px;border-radius:var(--r-lg);border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;line-height:1.2;transition:background-color .15s}
 .pbtn:hover{background:var(--chip)}
 .pbtn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+@media (max-width:640px){.ptop{flex-wrap:wrap}.pcall{order:-1;flex:1 1 100%;min-height:72px}.pcall b{font-size:1.9rem}.pbtn,.callbig{flex:1 1 0;min-height:56px;min-width:0}.callbig{padding:0 16px;font-size:1.3rem}}
 .boards{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;min-height:0}
 @media (orientation:portrait){.boards{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr)}}
 .pb{display:flex;flex-direction:column;min-height:0;min-width:0;align-items:center}
